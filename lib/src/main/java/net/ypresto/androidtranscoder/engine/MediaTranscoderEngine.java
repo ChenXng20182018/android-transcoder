@@ -42,6 +42,7 @@ public class MediaTranscoderEngine {
     private FileDescriptor mInputFileDescriptor;
     private TrackTranscoder mVideoTrackTranscoder;
     private TrackTranscoder mAudioTrackTranscoder;
+    private String param;
     private MediaExtractor mExtractor;
     private MediaMuxer mMuxer;
     private volatile double mProgress;
@@ -171,7 +172,7 @@ public class MediaTranscoderEngine {
             @Override
             public void onDetermineOutputFormat() {
                 MediaFormatValidator.validateVideoOutputFormat(mVideoTrackTranscoder.getDeterminedFormat());
-                MediaFormatValidator.validateAudioOutputFormat(mAudioTrackTranscoder.getDeterminedFormat());
+                MediaFormatValidator.validateAudioOutputFormat(mAudioTrackTranscoder.getDeterminedFormat(), param);
             }
         });
 
@@ -182,8 +183,10 @@ public class MediaTranscoderEngine {
         }
         mVideoTrackTranscoder.setup();
         if (audioOutputFormat == null) {
+            param = " PassThroughTrackTranscoder";
             mAudioTrackTranscoder = new PassThroughTrackTranscoder(mExtractor, trackResult.mAudioTrackIndex, queuedMuxer, QueuedMuxer.SampleType.AUDIO);
         } else {
+            param = " AudioTrackTranscoder";
             mAudioTrackTranscoder = new AudioTrackTranscoder(mExtractor, trackResult.mAudioTrackIndex, audioOutputFormat, queuedMuxer);
         }
         mAudioTrackTranscoder.setup();
