@@ -41,7 +41,7 @@ public class AvcCsdUtils {
 
         skipStartCode(prefixedSpsBuffer);
         if (prefixedSpsBuffer.get() != AVC_SPS_NAL) {
-            throw new IllegalStateException("Got non SPS NAL data.");
+            throw new IllegalStateException("Got non SPS NAL data." + prefixedSpsBuffer.get());
         }
         return prefixedSpsBuffer.slice();
     }
